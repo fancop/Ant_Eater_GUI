@@ -1,5 +1,7 @@
 import pygame
 import sys
+import random
+
 
 class Field:
     def __init__(self, screen, cell_size, num_cells_x, num_cells_y):
@@ -7,6 +9,8 @@ class Field:
         self.cell_size = cell_size
         self.num_cells_x = num_cells_x
         self.num_cells_y = num_cells_y
+        self.player = Player(self.cell_size, self.num_cells_x, self.num_cells_y)
+        self.font = pygame.font.Font(None, self.cell_size)
 
     def render(self, offset_x, offset_y):
         for x in range(self.num_cells_x):
@@ -20,6 +24,22 @@ class Field:
                 )
 
                 self.screen.blit(cell_surface, cell_rect.topleft)
+
+        # Отрисовка игрока
+        player_text = self.font.render("P", True, (0, 0, 255))
+        player_rect = player_text.get_rect(
+            center=(offset_x + (self.player.x + 0.5) * self.cell_size,
+                    offset_y + (self.player.y + 0.5) * self.cell_size)
+        )
+        self.screen.blit(player_text, player_rect.topleft)
+
+
+class Player:
+    def __init__(self, cell_size, num_cells_x, num_cells_y):
+        self.cell_size = cell_size
+        self.x = random.randint(0, num_cells_x - 1)  # Рандомная начальная позиция игрока по X
+        self.y = random.randint(0, num_cells_y - 1)  # Рандомная начальная позиция игрока по Y
+
 
 class Window:
     def __init__(self):
