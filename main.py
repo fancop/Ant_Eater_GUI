@@ -9,7 +9,7 @@ class Field:
         self.cell_size = cell_size
         self.num_cells_x = num_cells_x
         self.num_cells_y = num_cells_y
-        self.player = Player(self.cell_size, self.num_cells_x, self.num_cells_y)
+        self.player = Player(self.cell_size, self.num_cells_x, self.num_cells_y, num_cells_x, num_cells_y)
         self.font = pygame.font.Font(None, self.cell_size)
 
     def render(self, offset_x, offset_y):
@@ -35,10 +35,16 @@ class Field:
 
 
 class Player:
-    def __init__(self, cell_size, num_cells_x, num_cells_y):
+    def __init__(self, cell_size, num_cells_x, num_cells_y, field_num_cells_x, field_num_cells_y):
         self.cell_size = cell_size
         self.x = random.randint(0, num_cells_x - 1)  # Рандомная начальная позиция игрока по X
         self.y = random.randint(0, num_cells_y - 1)  # Рандомная начальная позиция игрока по Y
+        self.num_cells_x = field_num_cells_x
+        self.num_cells_y = field_num_cells_y
+
+    def move(self, dx, dy):
+        self.x = (self.x + dx) % self.num_cells_x
+        self.y = (self.y + dy) % self.num_cells_y
 
 
 class Window:
@@ -69,6 +75,14 @@ class Window:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.is_running = False
+                elif event.key == pygame.K_UP:
+                    self.field.player.move(0, -1)
+                elif event.key == pygame.K_DOWN:
+                    self.field.player.move(0, 1)
+                elif event.key == pygame.K_LEFT:
+                    self.field.player.move(-1, 0)
+                elif event.key == pygame.K_RIGHT:
+                    self.field.player.move(1, 0)
 
     def update(self):
         pass
@@ -85,6 +99,7 @@ class Window:
     def quit_game(self):
         pygame.quit()
         sys.exit()
+
 
 if __name__ == "__main__":
     game = Window()
